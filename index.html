@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>画面共有＋チャット</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <h1>画面共有＋チャット（1対1）</h1>
+
+  <div class="room">
+    <label>ルームID: <input id="roomId" value="test-room" /></label>
+    <button id="hostBtn">ホストとして開始（画面共有する側）</button>
+    <button id="joinBtn">視聴側として参加</button>
+  </div>
+
+  <div class="videos">
+    <div>
+      <h2>自分</h2>
+      <video id="localVideo" autoplay playsinline muted></video>
+    </div>
+    <div>
+      <h2>相手</h2>
+      <video id="remoteVideo" autoplay playsinline></video>
+    </div>
+  </div>
+
+  <div class="chat">
+    <h2>チャット</h2>
+    <div id="chatLog" class="chat-log"></div>
+    <input id="chatInput" placeholder="メッセージを入力" />
+    <button id="sendBtn">送信</button>
+  </div>
+
+  <script>
+    // Cloudflare Workers の URL をここに書く
+    window.SIGNALING_URL = "https://your-worker-subdomain.your-domain.workers.dev";
+  </script>
+  <script src="main.js"></script>
+</body>
+</html>
