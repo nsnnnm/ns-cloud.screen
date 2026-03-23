@@ -1,4 +1,5 @@
-const signalingUrl = window.SIGNALING_URL; // index.html で設定
+const signalingUrl = window.SIGNALING_URL;
+
 const roomInput = document.getElementById("roomId");
 const hostBtn = document.getElementById("hostBtn");
 const joinBtn = document.getElementById("joinBtn");
@@ -56,12 +57,8 @@ function createPeerConnection() {
 }
 
 function setupDataChannel() {
-  dataChannel.onopen = () => {
-    logChat("system", "チャット接続しました");
-  };
-  dataChannel.onmessage = (event) => {
-    logChat("remote", event.data);
-  };
+  dataChannel.onopen = () => logChat("system", "チャット接続しました");
+  dataChannel.onmessage = (e) => logChat("remote", e.data);
 }
 
 async function startHost() {
@@ -99,9 +96,7 @@ async function startJoin() {
   });
   localVideo.srcObject = stream;
 
-  await sendToSignaling({
-    type: "join",
-  });
+  await sendToSignaling({ type: "join" });
 
   startPolling();
 }
@@ -122,26 +117,24 @@ async function sendToSignaling(payload) {
 async function pollSignaling() {
   if (polling) return;
   polling = true;
+
   const roomId = roomInput.value.trim();
 
   while (true) {
     try {
       const res = await fetch(
-        signalingUrl + `/poll?roomId=${encodeURIComponent(roomId)}&role=${isHost ? "host" : "guest"}`,
-        { method: "GET" }
+        signalingUrl + `/poll?roomId=${roomId}&role=${isHost ? "host" : "guest"}`
       );
-      if (!res.ok) {
-        await new Promise((r) => setTimeout(r, 1000));
-        continue;
-      }
       const messages = await res.json();
+
       for (const msg of messages) {
         await handleSignalingMessage(msg);
       }
     } catch (e) {
       console.error("poll error", e);
-      await new Promise((r) => setTimeout(r, 1000));
     }
+
+    await new Promise((r) => setTimeout(r, 500));
   }
 }
 
@@ -173,10 +166,5 @@ async function handleSignalingMessage(msg) {
   }
 }
 
-hostBtn.onclick = () => {
-  startHost().catch(console.error);
-};
-
-joinBtn.onclick = () => {
-  startJoin().catch(console.error);
-};
+hostBtn.onclick = () => startHost();
+joinBtn.onclick = () => startJoin();
