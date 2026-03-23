@@ -10,7 +10,7 @@
 
   <div class="room">
     <label>ルームID: <input id="roomId" value="test-room" /></label>
-    <button id="hostBtn">ホストとして開始（画面共有する側）</button>
+    <button id="hostBtn">ホストとして開始（画面共有）</button>
     <button id="joinBtn">視聴側として参加</button>
   </div>
 
@@ -33,8 +33,8 @@
   </div>
 
   <script>
-    // Cloudflare Workers の URL をここに書く
-    window.SIGNALING_URL = "https://webrtc-signal.nekosuke-1012.workers.dev/";
+    // ★ここをあなたの Worker URL に変更する★
+    window.SIGNALING_URL = "https://webrtc-signal.<あなた>.workers.dev";
   </script>
   <script src="main.js"></script>
 </body>
